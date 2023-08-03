@@ -1,0 +1,24 @@
+<% if @user.errors.any? %>
+<% @user.errors.full_messages.each do |msg| %>
+  <h2>Errors :</h2>
+  <%= msg %>
+<% end %>
+<% end %>
+<%= form_with(model: @user, local: true) do |f| %>
+    <p>
+    <%= f.label :username %><br>
+    <%= f.text_field :username %>
+    </p>
+    <p>
+    <%= f.label :email %><br>
+    <%= f.email_field :email %>
+    </p>
+    <p>
+    <%= f.label :password_digest %><br>
+    <%= f.password_field :password_digest %>
+    </p>
+    <p>
+    <%= f.submit %>
+    </p>
+<% end %>
+<%= link_to 'Go back to users page', users_path %>

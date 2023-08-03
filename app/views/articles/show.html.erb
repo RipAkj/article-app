@@ -1,0 +1,8 @@
+<p> Article by:<%= @article.user.username %></p>
+<p>Title:<%= @article.title %></p>
+<p>Descripton:<%= @article.description %></p>
+<% if logged_in? && @article.user == current_user %>
+<%= link_to 'Edit', edit_article_path(@article.id) %>
+<%= link_to 'Delete', article_path(@article),method: :delete %>
+<% end %>
+<%= link_to 'Return to articles listing', articles_path %>

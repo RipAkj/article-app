@@ -1,0 +1,11 @@
+<h1>home</h1>
+<%= link_to 'All Articles', articles_path %>
+<%= link_to 'About page', about_path %>
+<%= link_to "All Users", users_path %>
+<% if logged_in? %>
+<%= link_to current_user.username, user_path(current_user)%>
+<%= link_to "Logout", logout_path,
+data: { turbo_method: :delete } %>
+<% else %>
+<%= link_to 'Log in', login_path %>
+<% end %>
