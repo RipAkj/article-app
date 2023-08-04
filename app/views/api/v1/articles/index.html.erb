@@ -1,0 +1,20 @@
+<% @articles.each do |article| %>
+
+ <%= article.user.username %>
+  <%= article.title %>
+  <%= article.description %>
+  <%= link_to 'Show', api_v1_article_path(article) %>
+  <%= link_to 'Edit', edit_api_v1_article_path(article) %>
+  <%= link_to 'Delete', api_v1_article_path(article),
+  data: { turbo_method: :delete }%>
+  <% end %>
+
+
+<div class="apple_pagination">
+    <div class="page_info">
+      <%= page_entries_info @articles %>
+    </div>
+    <%= will_paginate @articles, :container => false %>
+  </div>
+
+<%= link_to 'Create new article', new_api_v1_article_path %>

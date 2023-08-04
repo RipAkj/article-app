@@ -1,23 +1,24 @@
-class ArticlesController < ApplicationController
+module Api
+  module V1
+class ArticlesController < ApiController
   def show
-    @article=Article.find(params[:id])
+    render json:@article=Article.find(params[:id])
   end
   def index
-    @articles = Article.paginate(page: params[:page], per_page: 5)
+    render json:@articles = Article.all
   end
   def new
-    @article = Article.new
+    render json:@article = Article.new
   end
   def edit
-    @article = Article.find(params[:id])
+    render json:@article = Article.find(params[:id])
   end
   def create
     #render plain: params[:article]
     @article = Article.new(params.require(:article).permit(:title, :description))
     @article.user = current_user
     if @article.save
-      flash[:notice]="Article was created successfully"
-      redirect_to article_path(@article)
+      render json:"Article was created successfully"
     else
       render 'new'
     end
@@ -25,14 +26,15 @@ class ArticlesController < ApplicationController
   def update
     @article = Article.find(params[:id])
     if @article.update(params.require(:article).permit(:title, :description))
-      flash[:notice]="Article was updated successfully"
-      redirect_to @article
+      render json:"Article was updated successfully"
+      return
     else
-      render 'edit'
+      render json:"Article was not updated"
     end
   end
   def destroy
     @article = Article.find(params[:id]).destroy
-    redirect_to articles_path
   end
+end
+end
 end
