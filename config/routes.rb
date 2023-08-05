@@ -3,16 +3,23 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
-  namespace :api do
-    namespace :v1 do
+
   root 'pages#home'
   get 'about', to: 'pages#about'
   resources :articles
   post 'signup', to: 'users#create'
    resources :users, except: [:new]
-   post 'login', to: 'sessions#create'
+   post 'login', to: 'session#create'
   delete 'logout', to: 'sessions#destroy'
   get 'showArticle', to: 'users#showArticle'
-end
-end
+  get 'sortByLike', to: 'articles#sortByLike'
+  get 'sortByComment', to: 'articles#sortByComment'
+  resources :friendships
+  get 'userSearch', to: 'users#search'
+  get 'articleSearch', to: 'articles#search'
+  get 'topicSearch', to: 'articles#searchTopic'
+  get 'topPosts', to: 'articles#topPosts'
+  get 'similarArticles', to: 'articles#similarArticles'
+  get 'listTopic', to: 'articles#listTopic'
+  get 'recommendedArticles', to: 'users#recommendedArticles'
 end
