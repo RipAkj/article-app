@@ -18,10 +18,7 @@ class UsersController < ApplicationController
   def show
     @user=User.find(params[:id])
     @articles=@user.articles
-    response = { :user => @user, :articles => @articles }
-    respond_to do |format|
-      format.json  { render :json => response }
-    end
+    render json:@user
   end
   def edit
     render json:@user=User.find(params[:id])
@@ -50,9 +47,19 @@ class UsersController < ApplicationController
     @users=User.where("username LIKE ?", "%#{params[:s]}%")
     render json:@users
   end
-  # def recommendedArticles
-  #   @user=User.find(params[:id])
-  #   @following=Friendship.where(follower_id:@user)
-  #   @articles=Article.where(user_id: if @foloowing.)
-  # end
+  def recommendedArticles
+    @user=User.find(params[:id])
+    @following=Friendship.where(followed_id:@user)
+    @articlesOfFollowing=[]
+    @following.each do |user|
+      @a=Article.where(user_id:user)
+      @a.each do |a1|
+        @articlesOfFollowing.push(a1)
+      end
+      #@a=user.articles
+      #@articlesOfFollowing.push(user)
+    end
+    render json:@articlesOfFollowing
+    # @articles=Article.where(user_id: if @foloowing.)
+  end
 end

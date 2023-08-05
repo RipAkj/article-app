@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   resources :articles
   post 'signup', to: 'users#create'
    resources :users, except: [:new]
-   post 'login', to: 'session#create'
+   post 'login', to: 'sessions#create'
   delete 'logout', to: 'sessions#destroy'
   get 'showArticle', to: 'users#showArticle'
   get 'sortByLike', to: 'articles#sortByLike'
@@ -18,8 +18,10 @@ Rails.application.routes.draw do
   get 'userSearch', to: 'users#search'
   get 'articleSearch', to: 'articles#search'
   get 'topicSearch', to: 'articles#searchTopic'
-  get 'topPosts', to: 'articles#topPosts'
+  get 'topArticles', to: 'articles#topArticles'
   get 'similarArticles', to: 'articles#similarArticles'
   get 'listTopic', to: 'articles#listTopic'
   get 'recommendedArticles', to: 'users#recommendedArticles'
+  get 'showFollowers', to: 'friendships#showFollowers'
+  get 'showFollowing', to: 'friendships#showFollowing'
 end

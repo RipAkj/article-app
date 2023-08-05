@@ -30,7 +30,7 @@ class ArticlesController < ApplicationController
   end
   def update
     @article = Article.find(params[:id])
-    if @article.update(params.require(:article).permit(:title, :description, :user_id, :like, :comment))
+    if @article.update(params.require(:article).permit(:title, :description, :like, :comment))
       render json:"Article was updated successfully"
       return
     else
@@ -39,6 +39,7 @@ class ArticlesController < ApplicationController
   end
   def destroy
     @article = Article.find(params[:id]).destroy
+    render json:"Article was deleted successfully"
   end
   #/sortByLike
   def sortByLike
