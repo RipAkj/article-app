@@ -1,11 +1,20 @@
+require 'jwt'
 class AuthenticationController < ApplicationController
-#   skip_before_action :authenticate_request
-#   def create
-#     @user=User.find_by_email(params[:email])
-#     if @user&.authenticate(params[:password])
-#       token=jwt_encode(user_id: @user.id)
-#       render json: {token:token}
-#     else render json:{error:'unauthorized'}
-#   end
-# end
+
+  protect_from_forgery with: :null_session
+  def create
+    user = User.find_by(username: params[:username])
+
+    if user && user.password_digest == params[:password_digest]
+      payload = {
+        user_id: user.id,
+        exp: Time.now.to_i + 3600*24
+      }
+      token = JWT.encode(payload, 'your_secret_key', 'HS256')
+      render json: { token: token }
+    else
+      render json: { error: 'Invalid credentials' }, status: :unauthorized
+    end
+  end
+
 end

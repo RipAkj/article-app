@@ -9,8 +9,7 @@ Rails.application.routes.draw do
   resources :articles
   post 'signup', to: 'users#create'
    resources :users, except: [:new]
-   post 'login', to: 'sessions#create'
-  delete 'logout', to: 'sessions#destroy'
+   post '/auth/login', to: 'authentication#create'
   get 'showArticle', to: 'users#showArticle'
   get 'sortByLike', to: 'articles#sortByLike'
   get 'sortByComment', to: 'articles#sortByComment'

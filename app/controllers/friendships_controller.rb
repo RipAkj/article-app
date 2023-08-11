@@ -1,24 +1,26 @@
 class FriendshipsController < ApplicationController
+  before_action :require_authentication
+  protect_from_forgery with: :null_session
   def index
   end
   def create
-        @user1=User.find(params[:user1_id])
+        @user1=User.find(id:@current_user.id)
         @user2=User.find(params[:user2_id])
         @user1.follow(@user2)
         if(@user1.followers.include?(@user2))
-          render json:"Follow successfull"
+          render json:{msg:"Follow successfull"}
         else
-          render json:"Follow unsuccessfull"
+          render json:{msg:"Follow unsuccessfull"}
         end
   end
   def destroy
-    @user1=User.find(params[:id])
+    @user1=User.find(id:@current_user.id)
     @user2=User.find(params[:user2_id])
     @user1.unfollow(@user2)
     if(@user1.followers.include?(@user2))
-      render json:"UnFollow unsuccessfull"
+      render json:{msg:"UnFollow unsuccessfull"}
     else
-      render json:"UnFollow successfull"
+      render json:{msg:"UnFollow successfull"}
     end
   end
   def showFollowers
@@ -40,5 +42,19 @@ class FriendshipsController < ApplicationController
       @people.push(@a)
     end
     render json: @people
+  end
+  private
+
+  def require_authentication
+    header = request.headers['Authorization']
+    token = header.split(' ').last if header
+
+    begin
+      decoded_token = JWT.decode(token, 'your_secret_key', true, algorithm: 'HS256')
+      render json: {error: "invalid token"} if !decoded_token[0]['user_id']
+      @current_user = User.find(decoded_token[0]['user_id'])
+    rescue JWT::DecodeError
+      render json: { error: header }, status: :unauthorized
+    end
   end
 end

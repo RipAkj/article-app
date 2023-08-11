@@ -1,6 +1,6 @@
 
 class ArticlesController < ApplicationController
-  protect_from_forgery with: :null_session
+  before_action :require_authentication
   def show
     render json:@article=Article.find(params[:id])
   end
@@ -11,35 +11,39 @@ class ArticlesController < ApplicationController
       render json:@articles
     end
   end
-  def new
-    render json:@article = Article.new
-  end
-  def edit
-    render json:@article = Article.find(params[:id])
-  end
+
   def create
     #render plain: params[:article]
-    @article = Article.new(params.require(:article).permit(:title, :description,:user_id, :like,:comment))
-    @article.user_id=params[:id]
-
+    @article = Article.new(params.require(:article).permit(:title, :description, :like,:comment))
+    @article.user = @current_user
     if @article.save
-      render json:@article
+      render json:@article, status: :created
     else
-      render json: @article.errors.full_messages
+      render json: { errors:@current_user }, status: :unprocessable_entity
     end
   end
   def update
     @article = Article.find(params[:id])
+    if @article.user != @current_user
+      return render json: {msg: "you are not author of this article"}
+    end
     if @article.update(params.require(:article).permit(:title, :description, :like, :comment))
-      render json:"Article was updated successfully"
+      render json: @article, status: :ok
       return
     else
-      render json: @article.errors.full_messages
+      render json:{errors: @article.errors.full_messages}
     end
   end
   def destroy
-    @article = Article.find(params[:id]).destroy
-    render json:"Article was deleted successfully"
+    @article = Article.find(params[:id])
+    if @article.user != @current_user
+      return render json: {msg: "you are not author of article"}
+    end
+    if @article.destroy
+      render json: {msg: "given article deleted succesfully"}, status: :ok
+    else
+      render json: {errors: @article.errors.full_messages}, status: :no_content
+    end
   end
   #/sortByLike
   def sortByLike
@@ -84,5 +88,19 @@ class ArticlesController < ApplicationController
       end
     end
     render json:@a
+  end
+  private
+
+  def require_authentication
+    header = request.headers['Authorization']
+    token = header.split(' ').last if header
+
+    begin
+      decoded_token = JWT.decode(token, 'your_secret_key', true, algorithm: 'HS256')
+      render json: {error: "invalid token"} if !decoded_token[0]['user_id']
+      @current_user = User.find(decoded_token[0]['user_id'])
+    rescue JWT::DecodeError
+      render json: { error: header }, status: :unauthorized
+    end
   end
 end
