@@ -1,11 +1,13 @@
-
+require 'readingtime'
 class ArticlesController < ApplicationController
   before_action :require_authentication
   def show
-    render json:@article=Article.find(params[:id])
+    @article=Article.find(params[:id])
+      render json:@article
   end
   def index
-    render json:@articles = Article.all
+    @articles = Article.all
+    render json:@articles
     if params[:date]
       @articles = @articles.where(created_at: params[:date].to_date.beginning_of_day..params[:date].to_date.end_of_day)
       render json:@articles
@@ -14,8 +16,10 @@ class ArticlesController < ApplicationController
 
   def create
     #render plain: params[:article]
-    @article = Article.new(params.require(:article).permit(:title, :description, :like,:comment))
+    @article = Article.new(params.require(:article).permit(:title, :description, :like, :comment))
     @article.user = @current_user
+    @article.readingtime=@article.description.reading_time
+    @article.has_published=true
     if @article.save
       render json:@article, status: :created
     else
@@ -27,12 +31,18 @@ class ArticlesController < ApplicationController
     if @article.user != @current_user
       return render json: {msg: "you are not author of this article"}
     end
-    if @article.update(params.require(:article).permit(:title, :description, :like, :comment))
-      render json: @article, status: :ok
-      return
-    else
-      render json:{errors: @article.errors.full_messages}
-    end
+    # if @article.update(params.require(:article).permit(:title, :description, :like, :comment))
+    #   @article.readingtime=@article.description.reading_time
+        @user1=@article.user
+        @user1.revisionhistory=Array.new
+        @user1.revisionhistory.push(@article.id)
+        @user1.save
+        return render json: @user1
+    #   render json: @article, status: :ok
+    #   return
+    # else
+    #   render json:{errors: @article.errors.full_messages}
+    # end
   end
   def destroy
     @article = Article.find(params[:id])

@@ -1,9 +1,13 @@
-
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   before_save { self.email = email.downcase}
   has_many :articles
+  has_many :comments
+  has_many :viewed_articles
+  has_many :subscriptions
+  has_many :lists, dependent: :destroy
+  has_many :save_for_laters
   validates :username, presence: true, uniqueness: { case_sensitive: false }, length: { minimum:1 }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true,

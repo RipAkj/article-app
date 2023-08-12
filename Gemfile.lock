@@ -178,6 +178,7 @@ GEM
       execjs
       railties (>= 3.2)
       tilt
+    readingtime (0.4.0)
     regexp_parser (2.8.1)
     reline (0.3.7)
       io-console (~> 0.5)
@@ -240,6 +241,7 @@ DEPENDENCIES
   rack-cors
   rails (~> 7.0.6)
   react-rails (= 2.7)
+  readingtime (~> 0.4.0)
   selenium-webdriver
   sprockets-rails
   sqlite3 (~> 1.4)

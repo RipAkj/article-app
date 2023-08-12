@@ -76,3 +76,5 @@ group :test do
 end
 
 gem "react-rails", "= 2.7"
+
+gem "readingtime", "~> 0.4.0"
