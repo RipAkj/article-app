@@ -35,6 +35,9 @@ Rails.application.routes.draw do
 
   post '/articles/viewed/:id', to: 'viewedarticles#create'
 
+  get 'revision', to: 'revisions#show'
+  get 'revision/:id', to: 'revisions#replace'
+
   resources :drafts, only: [:show, :index, :create, :update, :destroy]
 
   resources :lists, only: [:show, :index, :create, :update, :destroy]

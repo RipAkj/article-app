@@ -15,9 +15,6 @@ class CommentsController < ApplicationController
       @article=Article.find(@comment.article_id)
       @article.comment=@article.comment+1
       @article.save
-      @revision=Revision.new(user_id:@current_user.id)
-      @revision.action=@current_user.username.to_s + ' commented on ' + @article.id.to_s
-      @revision.save
       render json: @comment, status: :created
     else
       render json: { error:@comment.errors.full_messages }, status: :unprocessable_entity
@@ -30,9 +27,6 @@ class CommentsController < ApplicationController
       return render json: {msg: "you are not the author"}, status: :unauthorized
     end
     if @comment.update(params.require(:comment).permit(:text, :article_id))
-      @revision=Revision.new(user_id:@current_user.id)
-      @revision.action=@current_user.username.to_s + ' updated commented on Article ' + @comment.article_id.to_s
-      @revision.save
       render json: @comment, status: :ok
     else
       render json: { error:@comment.errors.full_messages }, status: :unprocessable_entity
@@ -48,9 +42,6 @@ class CommentsController < ApplicationController
       @article=Article.find(@comment.article_id)
       @article.comment=@article.comment-1
       @article.save
-      @revision=Revision.new(user_id:@current_user.id)
-      @revision.action=@current_user.username.to_s + ' deleted commented on ' + @article.id.to_s
-      @revision.save
       render json: {msg: "this comment has been deleted"}, status: :ok
     else
       render json: {errors: @comment.errors.full_messages}, status: :no_content

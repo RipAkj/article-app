@@ -34,6 +34,13 @@ class ViewedarticlesController < ApplicationController
     end
   end
 
+  def revision
+    @revisions=Revision.all.where(user_id:@current_user.id)
+    render json: @revisions, status: :ok
+  end
+
+
+
   private
 
   def require_authentication

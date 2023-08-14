@@ -24,8 +24,9 @@ class ArticlesController < ApplicationController
     @article.readingtime=@article.description.reading_time
     @article.has_published=true
     if @article.save
-      @revision=Revision.new(user_id:@current_user.id)
-      @revision.action='Article no '+ @article.id.to_s + ' created by ' + @current_user.username.to_s
+      @revision=Revision.new(title:@article.title,description:@article.description,topic:@article.topic)
+      @revision.user=@current_user
+      @revision.action="created"
       @revision.save
       render json: @article, status: :created
     else
@@ -40,8 +41,9 @@ class ArticlesController < ApplicationController
     end
     if @article.update(params.require(:article).permit(:title, :description, :like, :comment, :topic))
       @article.readingtime=@article.description.reading_time
-      @revision=Revision.new(user_id:@current_user.id)
-      @revision.action='Article no '+ @article.id.to_s + ' updated by ' + @current_user.username.to_s
+      @revision=Revision.new(title:@article.title,description:@article.description,topic:@article.topic)
+      @revision.user=@current_user
+      @revision.action="updated"
       @revision.save
       render json: @article, status: :ok
       return
@@ -56,9 +58,11 @@ class ArticlesController < ApplicationController
     if @article.user != @current_user
       return render json: {msg: "you are not author of article"}, status: :unauthorized
     end
+    @temp=@article
     if @article.destroy
-      @revision=Revision.new(user_id:@current_user.id)
-      @revision.action='Article no '+ id.to_s + ' deleted by ' + @current_user.username.to_s
+      @revision=Revision.new(title:@article.title,description:@article.description,topic:@article.topic)
+      @revision.user=@current_user
+      @revision.action="deleted"
       @revision.save
       render json: {msg: "given article deleted succesfully"}, status: :ok
     else
