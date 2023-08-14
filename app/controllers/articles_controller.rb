@@ -4,17 +4,13 @@ class ArticlesController < ApplicationController
 
   def show
     @article=Article.find(params[:id])
-    @revision=Revision.new(user_id:@current_user.id)
-    @revision.action='Article no '+ @article.id.to_s + ' viewed by ' + @current_user.username.to_s
-    @revision.save
     render json: @article, status: :ok
   end
 
   def index
-    @articles = Article.all
-    @revision=Revision.new(user_id:@current_user.id)
-    @revision.action='All Articles '+ 'viewed by ' + @current_user.username.to_s
-    @revision.save
+    @articles = Article.all.select{ |article|
+      article.has_published==true
+    }
     render json: @articles,status: :ok
   end
 
