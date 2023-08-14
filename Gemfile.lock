@@ -96,6 +96,9 @@ GEM
     execjs (2.8.1)
     globalid (1.1.0)
       activesupport (>= 5.0)
+    httparty (0.21.0)
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     importmap-rails (1.2.1)
@@ -122,6 +125,9 @@ GEM
     mini_mime (1.1.2)
     minitest (5.19.0)
     msgpack (1.7.2)
+    multi_xml (0.6.0)
+    mustermann (3.0.0)
+      ruby2_keywords (~> 0.0.1)
     net-imap (0.3.7)
       date
       net-protocol
@@ -141,6 +147,8 @@ GEM
     rack (2.2.8)
     rack-cors (2.0.1)
       rack (>= 2.0.0)
+    rack-protection (3.1.0)
+      rack (~> 2.2, >= 2.2.4)
     rack-test (2.1.0)
       rack (>= 1.3)
     rails (7.0.6)
@@ -172,6 +180,8 @@ GEM
       thor (~> 1.0)
       zeitwerk (~> 2.5)
     rake (13.0.6)
+    razorpay (3.0.0)
+      httparty (~> 0.14)
     react-rails (2.7.0)
       babel-transpiler (>= 0.7.0)
       connection_pool
@@ -183,11 +193,17 @@ GEM
     reline (0.3.7)
       io-console (~> 0.5)
     rexml (3.2.6)
+    ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
     selenium-webdriver (4.10.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    sinatra (3.1.0)
+      mustermann (~> 3.0)
+      rack (~> 2.2, >= 2.2.4)
+      rack-protection (= 3.1.0)
+      tilt (~> 2.0)
     sprockets (4.2.0)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -240,9 +256,11 @@ DEPENDENCIES
   puma (~> 5.0)
   rack-cors
   rails (~> 7.0.6)
+  razorpay (~> 3.0)
   react-rails (= 2.7)
   readingtime (~> 0.4.0)
   selenium-webdriver
+  sinatra (~> 3.1)
   sprockets-rails
   sqlite3 (~> 1.4)
   stimulus-rails

@@ -78,3 +78,7 @@ end
 gem "react-rails", "= 2.7"
 
 gem "readingtime", "~> 0.4.0"
+
+gem "razorpay", "~> 3.0"
+
+gem "sinatra", "~> 3.1"

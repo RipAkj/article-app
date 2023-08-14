@@ -3,12 +3,12 @@ class ListsController < ApplicationController
 
   def show
     @list=List.find(params[:id])
-    render json:@list
+    render json: {list:@list,listItems:@list.list_items}, status: :ok
   end
 
   def index
     lists=@current_user.lists
-    render json:lists
+    render json: lists, status: :ok
   end
 
   def create
@@ -17,7 +17,7 @@ class ListsController < ApplicationController
     if @list.save
       render json:@list, status: :created
     else
-      render json: { errors:@current_user }, status: :unprocessable_entity
+      render json: { errors:@list.errors.full_messages}, status: :no_content
     end
   end
 
@@ -25,20 +25,20 @@ class ListsController < ApplicationController
   def update
     @list = List.find(params[:id])
     if @list.user != @current_user
-      return render json: {msg: "you are not author of this list"}
+      return render json: {msg: "you are not author of this list"}, status: :unauthorized
     end
     if @list.update(params.require(:list).permit(:name))
       render json: @list, status: :ok
       return
     else
-      render json:{errors: @list.errors.full_messages}
+      render json:{errors: @list.errors.full_messages}, status: :no_content
     end
   end
 
   def destroy
     @list = List.find(params[:id])
     if @list.user != @current_user
-      return render json: {msg: "you are not author of list"}
+      return render json: {msg: "you are not author of list"}, status: :unauthorized
     end
     if @list.destroy
       render json: {msg: "given list deleted succesfully"}, status: :ok
@@ -53,6 +53,11 @@ class ListsController < ApplicationController
     @listNew=List.new(name:list.name)
     @listNew.user=@user
     if @listNew.save
+      @listNewItem=list.list_items
+      @listNewItem.each do |item|
+        @a=ListItem.new(list_id:@listNew.id,article_id:item.article_id)
+        @a.save
+      end
       render json: {msg:@listNew}, status: :ok
     else
       render json: {errors: @listNew.errors.full_messages}, status: :no_content
@@ -72,4 +77,5 @@ class ListsController < ApplicationController
       render json: { error: header }, status: :unauthorized
     end
   end
+
 end

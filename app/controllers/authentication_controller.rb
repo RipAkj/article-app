@@ -1,10 +1,9 @@
 require 'jwt'
 class AuthenticationController < ApplicationController
-
   protect_from_forgery with: :null_session
+
   def create
     user = User.find_by(username: params[:username])
-
     if user && user.password_digest == params[:password_digest]
       payload = {
         user_id: user.id,

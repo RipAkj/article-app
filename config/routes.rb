@@ -6,30 +6,44 @@ Rails.application.routes.draw do
 
   root 'pages#home'
   get 'about', to: 'pages#about'
+
+  #articles
   resources :articles
+
   post 'signup', to: 'users#create'
   resources :users, except: [:new]
   post '/auth/login', to: 'authentication#create'
-  get 'showArticle', to: 'users#showArticle'
-  get 'sortByLike', to: 'articles#sortByLike'
-  get 'sortByComment', to: 'articles#sortByComment'
-  resources :friendships
-  get 'userSearch', to: 'users#search'
-  get 'articleSearch', to: 'articles#search'
-  get 'topicSearch', to: 'articles#searchTopic'
-  get 'topArticles', to: 'articles#topArticles'
-  get 'similarArticles', to: 'articles#similarArticles'
-  get 'listTopic', to: 'articles#listTopic'
-  get 'recommendedArticles', to: 'users#recommendedArticles'
-  get 'showFollowers', to: 'friendships#showFollowers'
-  get 'showFollowing', to: 'friendships#showFollowing'
-  resources :comments, only: [:create, :update, :destroy]
-  resources :likes, only: [:create, :destroy]
-  post '/articles/viewed', to: 'viewedarticles#create'
-  post '/user/subscription', to: 'subscriptions#create'
+
+  resources :friendships, only: [:destroy]
+  post 'friendships/:id', to: 'friendships#create'
+  get 'showFollowers/:id', to: 'friendships#showFollowers'
+  get 'showFollowing/:id', to: 'friendships#showFollowing'
+
+  get 'userSearch', to: 'operations#userSearch'
+  get 'articleSearch', to: 'operations#articleSearch'
+  get 'topicSearch', to: 'operations#searchTopic'
+  get 'topArticles', to: 'operations#topArticles'
+  get 'similarArticles', to: 'operations#similarArticles'
+  get 'listTopic', to: 'operations#listTopic'
+  get 'recommendedArticles/:id', to: 'operations#recommendedArticles'
+  get 'showArticle', to: 'operations#showArticle'
+  get 'sortByLike', to: 'operations#sortByLike'
+  get 'sortByComment', to: 'operations#sortByComment'
+
+  resources :comments, only: [:create, :update, :destroy, :show]
+  post 'likes/:id', to: 'likes#create'
+
+  post '/articles/viewed/:id', to: 'viewedarticles#create'
+
   resources :drafts, only: [:show, :index, :create, :update, :destroy]
+
   resources :lists, only: [:show, :index, :create, :update, :destroy]
   resources :listitems, only: [:create, :destroy]
   post 'listShare', to: 'lists#listShare'
-  resources :saveforlaters, only: [:create, :destroy, :index]
+
+  resources :saveforlaters, only: [:destroy, :index]
+  post 'saveforlaters/:id', to: 'saveforlaters#create'
+
+  post 'payments', to: 'payments#create'
+  post 'verify_payment', to: 'payments#verify_payment'
 end

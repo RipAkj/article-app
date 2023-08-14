@@ -3,11 +3,11 @@ class SaveforlatersController < ApplicationController
 
   def index
     save_for_laters=@current_user.save_for_laters
-    render json:save_for_laters
+    render json:save_for_laters, status: :ok
   end
 
   def create
-    @sfl = SaveForLater.new(article_id:params[:article_id])
+    @sfl = SaveForLater.new(article_id:params[:id])
     @sfl.user= @current_user
     #render json:params[:article_id]
     if @sfl.save
@@ -27,8 +27,6 @@ class SaveforlatersController < ApplicationController
     end
   end
 
-
-
   private
 
   def require_authentication
@@ -42,4 +40,5 @@ class SaveforlatersController < ApplicationController
       render json: { error: header }, status: :unauthorized
     end
   end
+
 end

@@ -4,9 +4,9 @@ class ListitemsController < ApplicationController
   def create
     @listItem = ListItem.new(params.require(:listitem).permit(:article_id, :list_id))
     if @listItem.save
-      render json:@listItem, status: :created
+      render json: @listItem, status: :created
     else
-      render json: { errors:@current_user }, status: :unprocessable_entity
+      render json: { errors:@listItem }, status: :unprocessable_entity
     end
   end
 
@@ -16,7 +16,7 @@ class ListitemsController < ApplicationController
     @listItems = @lists.list_items
     @listItem=@listItems.select{ |item| item.article_id == params[:article_id]}
     if @lists.user != @current_user
-      return render json: {msg: "you are not author of list item"}
+      return render json: {msg: "you are not author of list item"}, status: :unauthorized
     end
     if @listItem[0].destroy
       return render json: {msg: "given list item deleted succesfully"}, status: :ok
@@ -38,4 +38,5 @@ class ListitemsController < ApplicationController
       render json: { error: header }, status: :unauthorized
     end
   end
+
 end

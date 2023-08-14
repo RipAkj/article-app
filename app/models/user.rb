@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :subscriptions
   has_many :lists, dependent: :destroy
   has_many :save_for_laters
+  has_many :revisions
   validates :username, presence: true, uniqueness: { case_sensitive: false }, length: { minimum:1 }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true,
