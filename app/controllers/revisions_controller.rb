@@ -8,9 +8,8 @@ class RevisionsController < ApplicationController
 
   def replace
     @revision=@current_user.revisions.find(params[:id])
-    @article=Article.new(title:@revision.title,description:@revision.description,topic:@revision.topic)
-    @article.user=@current_user
-    if @article.save
+    @article=Article.find(@revision.article_id)
+    if @article.update(title:@revision.title,description:@revision.description,topic:@revision.topic)
       render json: { article: @article, message:'created successfully'}, status: :created
     else
       render json: { message:'not created'}, status: :unprocessable_entity

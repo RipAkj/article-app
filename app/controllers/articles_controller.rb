@@ -23,6 +23,7 @@ class ArticlesController < ApplicationController
       @revision=Revision.new(title:@article.title,description:@article.description,topic:@article.topic)
       @revision.user=@current_user
       @revision.action="created"
+      @revision.article_id=@article.id
       @revision.save
       render json: @article, status: :created
     else
@@ -40,6 +41,7 @@ class ArticlesController < ApplicationController
       @revision=Revision.new(title:@article.title,description:@article.description,topic:@article.topic)
       @revision.user=@current_user
       @revision.action="updated"
+      @revision.article_id=@article.id
       @revision.save
       render json: @article, status: :ok
       return
@@ -56,10 +58,8 @@ class ArticlesController < ApplicationController
     end
     @temp=@article
     if @article.destroy
-      @revision=Revision.new(title:@article.title,description:@article.description,topic:@article.topic)
-      @revision.user=@current_user
-      @revision.action="deleted"
-      @revision.save
+      @revision=Revision.where(article_id:@temp.id)
+      @revision.destroy_all
       render json: {msg: "given article deleted succesfully"}, status: :ok
     else
       render json: {errors: @article.errors.full_messages}, status: :no_content
